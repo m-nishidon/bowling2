@@ -119,7 +119,6 @@ if st.button("送信"):
         image_bytes = (
             None if "picture" not in st.session_state else st.session_state["picture"]
         )
-        st.write(str(image_bytes))
         if not name:
             utils.send_message(message, token, image_bytes)
             st.warning("匿名でメッセージを送信しました。")
