@@ -1,0 +1,6 @@
+gspread
+oauth2client
+pandas
+plotly
+streamlit==1.32.2
+Pillow
