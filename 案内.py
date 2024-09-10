@@ -7,6 +7,7 @@ import utils
 
 st.title(":bowling:ボウリング大会:bowling:")
 utils.clear_ss_score_update()
+service_acount_num = utils.get_service_acount_num()
 login_p = False if "login_p" not in st.session_state else True
 if not login_p:
     password = st.text_input("パスワードを入力してください:", type="password")
@@ -25,8 +26,7 @@ st.session_state["login_p"] = True
     stop_update,
     teams_1game_only,
     df_notice,
-) = utils.read_origin_score()
-
+) = utils.update_data(service_acount_num)
 
 for notice in df_notice["連絡"]:
     if notice:

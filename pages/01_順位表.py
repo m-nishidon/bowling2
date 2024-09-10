@@ -4,6 +4,8 @@ import streamlit as st
 
 import utils
 
+service_acount_num = utils.get_service_acount_num()
+
 login_p = False if "login_p" not in st.session_state else True
 if not login_p:
     password = st.text_input("パスワードを入力してください:", type="password")
@@ -38,7 +40,7 @@ colors = (
     stop_update,
     teams_1game_only,
     df_notice,
-) = utils.read_origin_score()
+) = utils.update_data(service_acount_num)
 
 
 # 結果発表前は19フレーム目までしか順位表に表現しない
@@ -159,23 +161,19 @@ width = st.sidebar.slider(
 
 # データを表示
 if st.button("順位更新"):
-    if (utils.get_now() - now).seconds <= 30:
-        st.warning("時間を空けて再度順位更新ボタンを押してください")
-    else:
-        # 再読み込み
-        utils.read_origin_score.clear()
-        (
-            df,
-            df_team,
-            current_frame,
-            df_conf,
-            now,
-            open_result,
-            stop_update,
-            teams_1game_only,
-            df_notice,
-        ) = utils.read_origin_score()
+    (
+        df,
+        df_team,
+        current_frame,
+        df_conf,
+        now,
+        open_result,
+        stop_update,
+        teams_1game_only,
+        df_notice,
+    ) = utils.update_data(service_acount_num)
 st.write(f'{now.strftime("%Y/%m/%d %H:%M:%S")}時点')
+st.write("間隔が短いと更新されません。時間をあけて再度確認してください。")
 
 if selected_name == {"ALL"}:
     st.title("チーム順位表")
@@ -273,6 +271,3 @@ fig.update_layout(
 )
 st.subheader("")
 st.plotly_chart(fig, use_container_width=True)
-
-
-# st.session_state["width_tmp"] = width

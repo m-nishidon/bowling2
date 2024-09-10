@@ -2,6 +2,7 @@ import streamlit as st
 
 import utils
 
+service_acount_num = utils.get_service_acount_num()
 login_p = False if "login_p" not in st.session_state else True
 if not login_p:
     password = st.text_input("パスワードを入力してください:", type="password")
@@ -27,7 +28,7 @@ st.title("スコア更新用")
     stop_update,
     teams_1game_only,
     df_notice,
-) = utils.read_origin_score()
+) = utils.update_data(service_acount_num)
 
 if stop_update and not exe_j:
     st.info("事務局確認中のため更新できません。結果発表をお待ちください。")
@@ -189,15 +190,29 @@ if res:
     """
     )
 
+connects = [
+    utils.connect_spread_sheet1,
+    utils.connect_spread_sheet2,
+    utils.connect_spread_sheet3,
+    utils.connect_spread_sheet4,
+    utils.connect_spread_sheet5,
+]
+reads = [
+    utils.read_origin_score1,
+    utils.read_origin_score2,
+    utils.read_origin_score3,
+    utils.read_origin_score4,
+    utils.read_origin_score5,
+]
 if "res" in st.session_state and st.session_state["res"]:
     if st.button("更新"):
-        client = utils.connect_spread_sheet()
+        client = connects[service_acount_num - 1]()
         # スプレッドシートを開く
         try:
             ws = client.open("スコア表").worksheet("data")
         except AttributeError:
-            utils.connect_spread_sheet.clear()
-            client = utils.connect_spread_sheet()
+            connects[service_acount_num - 1].clear()
+            client = connects[service_acount_num - 1]()
             ws = client.open("スコア表").worksheet("data")
         if selected_game == 1:
             cells = ws.range(f"D{idx_min+2}:X{idx_ma+2}")
@@ -223,7 +238,7 @@ if "res" in st.session_state and st.session_state["res"]:
         else:
             ws.update_cells(cells_update)
             # 再読み込み
-            utils.read_origin_score.clear()
+            reads[service_acount_num - 1].clear()
             (
                 df,
                 df_team,
@@ -234,7 +249,7 @@ if "res" in st.session_state and st.session_state["res"]:
                 stop_update,
                 teams_1game_only,
                 df_notice,
-            ) = utils.read_origin_score()
+            ) = utils.update_data(service_acount_num)
             st.success("更新しました")
             utils.balloons_or_snows()
             st.session_state["res"] = True

@@ -2,6 +2,7 @@ import streamlit as st
 
 import utils
 
+service_acount_num = 5  # 事務局ページは5
 login_j = False if "login_j" not in st.session_state else True
 
 (
@@ -14,7 +15,7 @@ login_j = False if "login_j" not in st.session_state else True
     stop_update,
     teams_1game_only,
     df_notice,
-) = utils.read_origin_score()
+) = utils.update_data(service_acount_num)
 utils.clear_ss_score_update()
 
 st.title("事務局用")
@@ -38,20 +39,20 @@ with st.expander("一覧", expanded=False):
     )
 df_conf = st.data_editor(df_conf, hide_index=True, use_container_width=True)
 if st.button("モード更新"):
-    client = utils.connect_spread_sheet()
+    client = utils.connect_spread_sheet5()
     # スプレッドシートを開く
     try:
         ws = client.open("スコア表").worksheet("data")
     except AttributeError:
-        utils.connect_spread_sheet.clear()
-        client = utils.connect_spread_sheet()
+        utils.connect_spread_sheet5.clear()
+        client = utils.connect_spread_sheet5()
         ws = client.open("スコア表").worksheet("data")
     cells = ws.range("AU2:AU4")
     for cell, value in zip(cells, df_conf["値"]):
         cell.value = value
     ws.update_cells(cells)
     # 再読み込み
-    utils.read_origin_score.clear()
+    utils.read_origin_score5.clear()
     (
         df,
         df_team,
@@ -62,7 +63,7 @@ if st.button("モード更新"):
         stop_update,
         teams_1game_only,
         df_notice,
-    ) = utils.read_origin_score()
+    ) = utils.update_data()
     st.success("更新しました")
 
 st.subheader("連絡更新")
@@ -85,13 +86,13 @@ notices = set(notices_l)
 
 notices_remove = notices_pre - notices
 if st.button("連絡更新"):
-    client = utils.connect_spread_sheet()
+    client = utils.connect_spread_sheet5()
     # スプレッドシートを開く
     try:
         ws = client.open("スコア表").worksheet("data")
     except AttributeError:
-        utils.connect_spread_sheet.clear()
-        client = utils.connect_spread_sheet()
+        utils.connect_spread_sheet5.clear()
+        client = utils.connect_spread_sheet5()
         ws = client.open("スコア表").worksheet("data")
     # 実装を簡略化するため50セル更新（それ以上の投稿はまずないはず…
     cells = ws.range("AX2:AX51")
@@ -111,7 +112,7 @@ if st.button("連絡更新"):
         cell.value = value
     ws.update_cells(cells)
     # 再読み込み
-    utils.read_origin_score.clear()
+    utils.read_origin_score5.clear()
     (
         df,
         df_team,
@@ -122,7 +123,7 @@ if st.button("連絡更新"):
         stop_update,
         teams_1game_only,
         df_notice,
-    ) = utils.read_origin_score()
+    ) = utils.update_data()
     st.success("更新しました")
 
 st.subheader("2ゲーム目を実施しないチームの設定")
@@ -133,13 +134,13 @@ selected_team = st.multiselect(
     teams_1game_only,
 )
 if st.button("チームを反映"):
-    client = utils.connect_spread_sheet()
+    client = utils.connect_spread_sheet5()
     # スプレッドシートを開く
     try:
         ws = client.open("スコア表").worksheet("data")
     except AttributeError:
-        utils.connect_spread_sheet.clear()
-        client = utils.connect_spread_sheet()
+        utils.connect_spread_sheet5.clear()
+        client = utils.connect_spread_sheet5()
         ws = client.open("スコア表").worksheet("data")
     # 実装を簡略化するため50セル更新（チーム数が最大50未満である必要あり
     cells = ws.range("AW2:AW51")
@@ -148,7 +149,7 @@ if st.button("チームを反映"):
         cell.value = value
     ws.update_cells(cells)
     # 再読み込み
-    utils.read_origin_score.clear()
+    utils.read_origin_score5.clear()
     (
         df,
         df_team,
@@ -159,7 +160,7 @@ if st.button("チームを反映"):
         stop_update,
         teams_1game_only,
         df_notice,
-    ) = utils.read_origin_score()
+    ) = utils.update_data()
     st.success("更新しました")
 st.write(
     "今回選択したチームにすべて書き換わります。（今回選択したチームを既に選択されているチームに追加ではありません）"
@@ -181,10 +182,13 @@ with st.expander("説明", expanded=False):
 
 if st.button("事務局権限付与"):
     st.session_state["exe_j"] = True
+    st.session_state["service_acount_num"] = 5
     st.success("権限を付与しました")
 
 if st.button("事務局権限解除"):
     del st.session_state["exe_j"]
+    del st.session_state["service_acount_num"]
+    utils.get_service_acount_num()
     st.success("権限を解除しました")
 
 st.subheader("最終確認用データ")
