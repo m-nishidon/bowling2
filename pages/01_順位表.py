@@ -135,28 +135,13 @@ if "ALL" not in selected_name:
 
 # 表示するフレームは進行状況に応じて自動変更
 # session_stateは使用しない
-current_frame = st.sidebar.slider(
-    label="フレームを選択してください",
-    min_value=1,
-    max_value=current_frame,
-    value=current_frame,
-)
-
-
-# グラフの幅の設定
-def update_width():
-    st.session_state["width"] = st.session_state["new_width"]
-
-
-width = st.sidebar.slider(
-    "グラフの幅を選択",
-    100,
-    700,
-    step=50,
-    key="new_width",
-    value=st.session_state["width"] if "width" in st.session_state else 300,
-    on_change=update_width,
-)
+if current_frame > 1:
+    current_frame = st.sidebar.slider(
+        label="フレームを選択してください",
+        min_value=0 if current_frame <= 1 else 1,
+        max_value=current_frame,
+        value=current_frame,
+    )
 
 
 # データを表示
@@ -218,7 +203,6 @@ if selected_name == {"ALL"}:
             yanchor="bottom",
         ),
         dragmode="pan",
-        width=width,
     )
 
     st.subheader("")
@@ -267,7 +251,6 @@ fig.update_layout(
         yanchor="bottom",
     ),
     dragmode="pan",
-    width=width,
 )
 st.subheader("")
 st.plotly_chart(fig, use_container_width=True)
