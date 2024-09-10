@@ -119,7 +119,13 @@ df = df[df.columns[2:]]
 st.write("以下の表を直接更新してください")
 edited_df = st.data_editor(df[df.columns[:-1]], use_container_width=True)
 
-with st.expander("データ更新説明", expanded=False):
+with st.expander(
+    "データ更新説明",
+    expanded=False,
+    column_config={
+        "名前": st.column_config.Column(editable=False)  # インデックス列は編集不可に
+    },
+):
     st.markdown(
         """
     【概要】  
