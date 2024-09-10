@@ -630,7 +630,7 @@ def keisha(row, max_):
 
 
 def make_rank(df, current_frame):
-    df = df.sort_values(current_frame, ascending=True)
+    df = df.sort_values(current_frame, ascending=False)
     df["順位"] = [i + 1 for i in range(df.shape[0])]
     return df
 
