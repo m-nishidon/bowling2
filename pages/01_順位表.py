@@ -6,12 +6,12 @@ import utils
 
 service_acount_num = utils.get_service_acount_num()
 
-login_p = False if "login_p" not in st.session_state else True
-if not login_p:
-    password = st.text_input("パスワードを入力してください:", type="password")
-    if password != st.secrets["all"]["password"]:
-        st.error("誰かにパスワードを確認してください")
-        exit()
+# login_p = False if "login_p" not in st.session_state else True
+# if not login_p:
+#     password = st.text_input("パスワードを入力してください:", type="password")
+#     if password != st.secrets["all"]["password"]:
+#         st.error("誰かにパスワードを確認してください")
+#         exit()
 st.session_state["login_p"] = True
 
 exe_j = False if "exe_j" not in st.session_state else st.session_state["exe_j"]
