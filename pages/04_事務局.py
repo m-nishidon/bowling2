@@ -128,10 +128,11 @@ if st.button("連絡更新"):
 
 st.subheader("2ゲーム目を実施しないチームの設定")
 
+st.write("2ゲーム目を実施しないチームは以下")
+st.write(",".join(map(str, teams_1game_only)))
 selected_team = st.multiselect(
     "2ゲーム目を実施しないチームがあれば選択してください",
     df_team["チーム"],
-    teams_1game_only,
 )
 if st.button("チームを反映"):
     client = utils.connect_spread_sheet5()
