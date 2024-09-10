@@ -63,7 +63,7 @@ if st.button("モード更新"):
         stop_update,
         teams_1game_only,
         df_notice,
-    ) = utils.update_data()
+    ) = utils.update_data(5)
     st.success("更新しました")
 
 st.subheader("連絡更新")
@@ -123,7 +123,7 @@ if st.button("連絡更新"):
         stop_update,
         teams_1game_only,
         df_notice,
-    ) = utils.update_data()
+    ) = utils.update_data(5)
     st.success("更新しました")
 
 st.subheader("2ゲーム目を実施しないチームの設定")
@@ -160,7 +160,7 @@ if st.button("チームを反映"):
         stop_update,
         teams_1game_only,
         df_notice,
-    ) = utils.update_data()
+    ) = utils.update_data(5)
     st.success("更新しました")
 st.write(
     "今回選択したチームにすべて書き換わります。（今回選択したチームを既に選択されているチームに追加ではありません）"
