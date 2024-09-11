@@ -12,7 +12,7 @@ login_p = False if "login_p" not in st.session_state else True
 if not login_p:
     password = st.text_input("パスワードを入力してください:", type="password")
     if password != st.secrets["all"]["password"]:
-        st.error("誰かにパスワードを確認してください")
+        st.error("パスワードは発信文を確認してください")
         exit()
 st.session_state["login_p"] = True
 
@@ -28,9 +28,16 @@ st.session_state["login_p"] = True
     df_notice,
 ) = utils.update_data(service_acount_num)
 
+funcs = [
+    lambda x: st.info((x.replace("\n", "  \n"))),
+    lambda x: st.error((x.replace("\n", "  \n"))),
+    lambda x: st.warning((x.replace("\n", "  \n"))),
+]
+
 for notice in df_notice["連絡"]:
     if notice:
-        st.info((notice.replace("\n", "  \n")))  # 改行のため
+        funcs[0](notice)
+        # st.info((notice.replace("\n", "  \n")))  # 改行のため
 
 if open_result:
     _, _, contest_mode = map(int, df_conf["値"])
@@ -43,14 +50,11 @@ if open_result:
 st.session_state["first_visit"] = True
 utils.clear_ss_score_update()
 
-st.subheader("アプリの説明")
 st.markdown(
     """
-- リアルタイムで各拠点のスコアを確認することでボウリング大会を盛り上げるためのアプリです
-    - 好きなようにボタンを押してもらってOKです！
-- リアルタイムで各拠点のスコアを確認するためには、スコアの入力が必要です
-    - 余裕のある方はぜひ、スコア更新のページから入力してください！
-    - 余裕のそこまでない方も、本ページ下部からスコア表の写真を適宜お送りいただけると助かります！
+- **ページ切り替えは画面左上の「>」マークをクリックして選択してください**
+- 順位の詳細は「順位表」ページにあります。
+
 """
 )
 

@@ -157,8 +157,8 @@ if st.button("順位更新"):
         teams_1game_only,
         df_notice,
     ) = utils.update_data(service_acount_num)
-st.write(f'{now.strftime("%Y/%m/%d %H:%M:%S")}時点')
-st.write("間隔が短いと更新されません。時間をあけて再度確認してください。")
+# st.write(f'{now.strftime("%Y/%m/%d %H:%M:%S")}時点')
+# st.write("間隔が短いと更新されません。時間をあけて再度確認してください。")
 
 if selected_name == {"ALL"}:
     st.title("チーム順位表")
