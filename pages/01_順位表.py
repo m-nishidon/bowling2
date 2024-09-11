@@ -50,8 +50,9 @@ if not open_result:
         current_frame = 19
 else:
     _, _, contest_mode = map(int, df_conf["値"])
-    if contest_mode:
+    if contest_mode and "visited" not in st.session_state:
         utils.balloons_or_snows()
+        st.session_state["visited"] = True
 
 
 # 拠点に関するフィルター
